@@ -43,7 +43,7 @@
         </dependency>
         <dependency>
             <groupId>it.exolab.prospetto</groupId>
-            <artifactId>ProspettoREST</artifactId>
+            <artifactId>ProspettoWEB</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
             <type>war</type>
@@ -116,9 +116,9 @@
                             </jarModule>
                             <webModule>
                                 <groupId>it.exolab.prospetto</groupId>
-                                <artifactId>ProspettoREST</artifactId>
-                                <bundleFileName>ProspettoREST.war</bundleFileName>
-                                <contextRoot>/ProspettoREST</contextRoot>
+                                <artifactId>ProspettoWEB</artifactId>
+                                <bundleFileName>ProspettoWEB.war</bundleFileName>
+                                <contextRoot>/ProspettoWEB</contextRoot>
                             </webModule>
                         </modules>
                     </configuration>

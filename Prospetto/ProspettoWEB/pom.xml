@@ -9,10 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ProspettoREST</artifactId>
+    <artifactId>ProspettoWEB</artifactId>
     <packaging>war</packaging>
 
-    <name>ProspettoREST Maven Webapp</name>
+    <name>ProspettoWEB Maven Webapp</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
@@ -38,7 +38,7 @@
     </dependencies>
 
     <build>
-        <finalName>ProspettoREST</finalName>
+        <finalName>ProspettoWEB</finalName>
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
             <plugins>
                 <plugin>
