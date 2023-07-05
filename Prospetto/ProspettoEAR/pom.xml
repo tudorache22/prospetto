@@ -102,7 +102,7 @@
                         <defaultLibBundleDir>lib</defaultLibBundleDir>
                         <filtering>true</filtering>
                         <earSourceDirectory>EarContent</earSourceDirectory>
-                        <generateApplicationXml>false</generateApplicationXml>
+                        <generateApplicationXml>true</generateApplicationXml>
                         <modules>
                             <ejbModule>
                                 <groupId>it.exolab.prospetto</groupId>
@@ -114,12 +114,12 @@
                                 <artifactId>ProspettoUtilities</artifactId>
                                 <bundleFileName>ProspettoUtilities.jar</bundleFileName>
                             </jarModule>
-                            <warModule>
+                            <webModule>
                                 <groupId>it.exolab.prospetto</groupId>
                                 <artifactId>ProspettoREST</artifactId>
                                 <bundleFileName>ProspettoREST.war</bundleFileName>
                                 <contextRoot>/ProspettoREST</contextRoot>
-                            </warModule>
+                            </webModule>
                         </modules>
                     </configuration>
                 </plugin>
