@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="it.exolab.prospetto.AppTest" time="0.042" tests="1" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="sun.desktop" value="windows"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.specification.version" value="11"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="D:\development\workspaces\workspace-personale\Prospetto\ProspettoEJB\target\test-classes;D:\development\workspaces\workspace-personale\Prospetto\ProspettoEJB\target\classes;C:\Users\Exolab\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Exolab\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;D:\development\workspaces\workspace-personale\Prospetto\ProspettoUtilities\target\ProspettoUtilities-1.0-SNAPSHOT.jar;C:\Users\Exolab\.m2\repository\javax\xml\bind\jaxb-api\2.2.12\jaxb-api-2.2.12.jar;C:\Users\Exolab\.m2\repository\org\mybatis\mybatis\3.3.0\mybatis-3.3.0.jar;C:\Users\Exolab\.m2\repository\jakarta\platform\jakarta.jakartaee-api\8.0.0\jakarta.jakartaee-api-8.0.0.jar;"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://openjdk.java.net/"/>
+    <property name="user.timezone" value="Europe/Berlin"/>
+    <property name="java.vm.specification.version" value="11"/>
+    <property name="os.name" value="Windows 10"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="IT"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-11.0.13\bin"/>
+    <property name="sun.java.command" value="C:\Users\Exolab\AppData\Local\Temp\surefire16320464488368298369\surefirebooter15552750772441891686.jar C:\Users\Exolab\AppData\Local\Temp\surefire16320464488368298369 2023-07-05T12-28-47_517-jvmRun1 surefire6891729497453586541tmp surefire_211692427467272425009tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="D:\development\workspaces\workspace-personale\Prospetto\ProspettoEJB\target\test-classes;D:\development\workspaces\workspace-personale\Prospetto\ProspettoEJB\target\classes;C:\Users\Exolab\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Exolab\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;D:\development\workspaces\workspace-personale\Prospetto\ProspettoUtilities\target\ProspettoUtilities-1.0-SNAPSHOT.jar;C:\Users\Exolab\.m2\repository\javax\xml\bind\jaxb-api\2.2.12\jaxb-api-2.2.12.jar;C:\Users\Exolab\.m2\repository\org\mybatis\mybatis\3.3.0\mybatis-3.3.0.jar;C:\Users\Exolab\.m2\repository\jakarta\platform\jakarta.jakartaee-api\8.0.0\jakarta.jakartaee-api-8.0.0.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\Exolab"/>
+    <property name="user.language" value="it"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2021-10-19"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk-11.0.13"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="D:\development\workspaces\workspace-personale\Prospetto\ProspettoEJB"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="surefire.real.class.path" value="C:\Users\Exolab\AppData\Local\Temp\surefire16320464488368298369\surefirebooter15552750772441891686.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="11.0.13+10-LTS-370"/>
+    <property name="user.name" value="Exolab"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="file.encoding" value="Cp1252"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="18.9"/>
+    <property name="localRepository" value="C:\Users\Exolab\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="C:\Users\Exolab\AppData\Local\Temp\"/>
+    <property name="java.version" value="11.0.13"/>
+    <property name="user.dir" value="D:\development\workspaces\workspace-personale\Prospetto\ProspettoEJB"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk-11.0.13\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\IBM\WebSphere MQ\Java\lib;C:\Program Files (x86)\IBM\WebSphere MQ\Java\lib64;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Java\jdk-11.0.13\bin;C:\Users\Exolab\AppData\Roaming\nvm;C:\Program Files\nodejs;D:\development\tools\apache-maven-3.6.3\bin;C:\Program Files\MongoDB\tools\bin;D:\development\tools\flutter\bin;C:\Program Files\MongoDB\tools\100\bin;C:\Program Files\Git\cmd;C:\Program Files (x86)\IBM\WebSphere MQ\bin64;C:\Program Files (x86)\IBM\WebSphere MQ\bin;C:\Program Files (x86)\IBM\WebSphere MQ\tools\c\samples\bin;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Maven\apache-maven-3.8.6\bin;C:\Users\Exolab\AppData\Local\Programs\Python\Python311\Scripts\;C:\Users\Exolab\AppData\Local\Programs\Python\Python311\;C:\Users\Exolab\AppData\Local\Microsoft\WindowsApps;C:\Users\Exolab\AppData\Local\JetBrains\Toolbox\scripts;C:\Users\Exolab\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Java\jdk-11.0.13\bin;;C:\Users\Exolab\AppData\Local\Programs\Microsoft VS Code\bin;."/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.vm.version" value="11.0.13+10-LTS-370"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="55.0"/>
+  </properties>
+  <testcase name="shouldAnswerWithTrue" classname="it.exolab.prospetto.AppTest" time="0.002"/>
+</testsuite>

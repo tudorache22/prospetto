@@ -1,0 +1,8 @@
+it\exolab\prospetto\controller\ManageDataRimanenza.class
+it\exolab\prospetto\controller\ProspettoControllerInterface.class
+it\exolab\prospetto\mapper\ProspettoMapperImplem.class
+it\exolab\prospetto\controller\ManageTotaleCampo.class
+it\exolab\prospetto\controller\ProspettoController.class
+it\exolab\prospetto\mapper\ProspettoMapper.class
+it\exolab\prospetto\factory\ProspettoSessionFactory.class
+it\exolab\prospetto\converter\DtoConverter.class

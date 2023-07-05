@@ -1,0 +1,16 @@
+it\exolab\prospetto\models\Gasolio.class
+it\exolab\prospetto\models\DataRimanenza.class
+it\exolab\prospetto\models\Benzina.class
+it\exolab\prospetto\models\ResultRow.class
+it\exolab\prospetto\enums\RigaRiferimento.class
+it\exolab\prospetto\models\DataRimanenzaRow.class
+it\exolab\prospetto\models\RigaProspetto.class
+it\exolab\prospetto\dto\ProspettoDTO.class
+it\exolab\prospetto\models\OliLubrificanti.class
+it\exolab\prospetto\models\Prospetto.class
+it\exolab\prospetto\models\GiacenzaCriterio.class
+it\exolab\prospetto\models\CountColonne.class
+it\exolab\prospetto\models\CriterioRicerca.class
+it\exolab\prospetto\models\Giacenza.class
+it\exolab\prospetto\models\Gpl.class
+it\exolab\prospetto\enums\ColonnaRiferimento.class

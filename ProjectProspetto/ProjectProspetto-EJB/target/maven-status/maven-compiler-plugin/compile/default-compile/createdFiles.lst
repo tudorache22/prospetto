@@ -1,8 +1,0 @@
-controller\ManageDataRimanenza.class
-controller\ProspettoController.class
-converter\DtoConverter.class
-controller\Prova.class
-mapper\ProspettoMapperImplem.class
-controller\ManageTotaleCampo.class
-factory\ProspettoSessionFactory.class
-mapper\ProspettoMapper.class
