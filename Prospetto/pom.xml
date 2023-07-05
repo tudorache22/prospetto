@@ -12,7 +12,7 @@
         <module>ProspettoEAR</module>
         <module>ProspettoEJB</module>
         <module>ProspettoUtilities</module>
-        <module>ProspettoWEB</module>
+        <module>ProspettoREST</module>
     </modules>
 
     <properties>

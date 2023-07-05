@@ -17,6 +17,13 @@
       </list>
     </option>
   </component>
+  <component name="LogFilters">
+    <option name="FILTER_ERRORS" value="false" />
+    <option name="FILTER_WARNINGS" value="false" />
+    <option name="FILTER_INFO" value="true" />
+    <option name="FILTER_DEBUG" value="true" />
+    <option name="CUSTOM_FILTER" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -31,8 +38,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "jdk.selected.JAVA_MODULE": "ibm-1.8",
-    "last_opened_file_path": "D:/development/workspaces/workspace-personale/Prospetto/ProspettoEJB/src/main/java/it/exolab/prospetto/controller",
+    "jdk.selected.JAVA_MODULE": "1.8",
+    "last_opened_file_path": "D:/development/workspaces/workspace-personale/Prospetto/ProspettoREST/src/main/java",
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
@@ -42,6 +49,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\development\workspaces\workspace-personale\Prospetto\ProspettoREST\src\main\java" />
       <recent name="D:\development\workspaces\workspace-personale\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\controller" />
       <recent name="D:\development\workspaces\workspace-personale\Prospetto\ProspettoEJB\src\main\resources" />
       <recent name="D:\development\workspaces\workspace-personale\Prospetto\ProspettoUtilities\src\main\java\it\exolab\prospetto\enums" />
@@ -54,6 +62,89 @@
       <recent name="it.exolab.prospetto.models" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration default="true" type="JBossConfiguration" factoryName="Local" ALTERNATIVE_JRE_ENABLED="false">
+      <deployment />
+      <server-settings>
+        <option name="SERVER" value="" />
+        <option name="BINDING_SET_NAME" value="" />
+        <option name="DOMAIN" value="false" />
+        <option name="SERVER_GROUP" value="" />
+        <option name="USERNAME" value="" />
+      </server-settings>
+      <predefined_log_file enabled="true" id="JBoss" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WebSphere/Liberty 8.5.5.13" type="WebSphereRunConfigurationType" factoryName="Local" APPLICATION_SERVER_NAME="WebSphere/Liberty 8.5.5.13" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
+      <option name="PORT" value="9080" />
+      <option name="UPDATING_POLICY" value="restart-server" />
+      <deployment />
+      <server-settings>
+        <option name="PROFILE_PATH" value="$PROJECT_DIR$/../../../runtimes/IBM/WebSphere/AppServer/profiles/AppSrv01" />
+        <option name="SOAP_PORT" value="8880" />
+        <option name="CELL_NAME" value="VM188Node03Cell" />
+        <option name="NODE_NAME" value="VM188Node03" />
+        <option name="SERVER_NAME" value="server1" />
+        <option name="USERNAME" value="admin1" />
+        <option name="CREDENTIAL_ALIAS" value="6252c8b7-0a36-40ab-8034-759550b07c72" />
+      </server-settings>
+      <predefined_log_file enabled="true" id="WebSphere" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="63154" />
+      </RunnerSettings>
+      <ConfigurationWrapper VM_VAR="DEBUG" RunnerId="Cover">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="DEBUG" RunnerId="Debug">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="DEBUG" RunnerId="Run">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="BuildArtifacts" enabled="false" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -62,7 +153,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1688544418878</updated>
-      <workItem from="1688544420399" duration="6822000" />
+      <workItem from="1688544420399" duration="7940000" />
+      <workItem from="1688554758984" duration="8354000" />
     </task>
     <servers />
   </component>

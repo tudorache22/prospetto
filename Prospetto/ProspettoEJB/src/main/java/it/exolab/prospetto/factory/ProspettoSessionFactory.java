@@ -25,7 +25,7 @@ public class ProspettoSessionFactory {
 
         if (sessionfactory == null){
             //path mybatis
-            String resource = "";
+            String resource = "config/mybatis-config.xml";
 
             Reader reader = Resources.getResourceAsReader(resource);
 

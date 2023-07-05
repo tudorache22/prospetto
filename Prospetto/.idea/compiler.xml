@@ -8,9 +8,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ProspettoEAR" />
         <module name="ProspettoUtilities" />
-        <module name="ProspettoWEB" />
         <module name="ProspettoEJB" />
+        <module name="ProspettoREST" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ProspettoWEB" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
