@@ -1,34 +1,29 @@
-package it.exolab.prospetto.models;
+package models;
 
+import lombok.Data;
 
-import it.exolab.prospetto.enums.ColonnaRiferimento;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import java.sql.Date;
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@Data
 public class Giacenza {
-    private String label;
-    private ColonnaRiferimento colonna_riferimento;
-    private String codGiacenza;
 
-    public String getCodGiacenza() {
-        return codGiacenza;
-    }
+    @XmlElement(name="TipoGiacenza")
+    private String tipoGiacenza;
 
-    public void setCodGiacenza(String codGiacenza) {
-        this.codGiacenza = codGiacenza;
-    }
+    @XmlElement(name="IdGiacenza")
+    private String idGiacenza;
 
-    public String getLabel() {
-        return label;
-    }
+    @XmlElement(name="Descrizione")
+    private String descrizione;
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+    @XmlElement(name="Tipologia")
+    private Tipologia tipologia;
 
-    public ColonnaRiferimento getColonna_riferimento() {
-        return colonna_riferimento;
-    }
-
-    public void setColonna_riferimento(ColonnaRiferimento colonna_riferimento) {
-        this.colonna_riferimento = colonna_riferimento;
-    }
+    @XmlElement(name = "DatiGiacenza")
+    private DatiProspetto datiProspetto;
 }
