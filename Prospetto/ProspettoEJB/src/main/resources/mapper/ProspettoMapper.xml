@@ -4,4 +4,33 @@
 
 <mapper namespace="">
 
+    <select id="getGiacenze" >
+
+        select
+        WURT1_COD_ACC AS codiceAccisa,
+        WURT1_GIACENZA AS giacenza,
+        WURT1_TIPO_GIACENZA as tipoGiacenza,
+        WURT1_DESCR_PROD as descTipoGiacenza,
+        WURT1_DT_GIAC_INIZ as dataGiacenzaIniziale
+        from WURT1_GIACENZE_CL
+        where WURT1_COD_ACC = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+        and WURT1_DT_GIAC_INIZ is not null
+        order by WURT1_TIPO_GIACENZA
+    </select>
+
+    <select id="getDataRimanenza" >
+
+        <if test="tipoGiacenzaRegistro.equals('O') || tipoGiacenzaRegistro.equals('G')">
+            select MIN(wurt1_dt_giac_iniz)   as   data_giac_iniz
+        </if>
+        <if test="!tipoGiacenzaRegistro.equals('O') and !tipoGiacenzaRegistro.equals('G')">
+            select wurt1_dt_giac_iniz   as   data_giac_iniz
+        </if>
+        from WURT1_GIACENZE_CL
+        where wurt1_cod_acc = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+          and  wurt1_giacenza =  #{idGiacenzaRegistro, javaType=String, jdbcType=VARCHAR}
+          and wurt1_dt_giac_iniz <![CDATA[ <= ]]> to_date(SYSDATA)
+
+    </select>
+
 </mapper>

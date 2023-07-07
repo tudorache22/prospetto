@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="ProspettoWEB:war">
+    <output-path>$PROJECT_DIR$/Prospetto/ProspettoWEB/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>ProspettoWEB</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="ProspettoWEB.war">
+      <element id="artifact" artifact-name="ProspettoWEB:war exploded" />
+    </root>
+  </artifact>
+</component>
