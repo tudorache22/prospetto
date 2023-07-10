@@ -2,51 +2,69 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="">
+<mapper namespace="ProspettoMapper">
+    <select id="countCampiGiacenza" parameterType="it.exolab.prospetto.dto.CriterioRicercaDTO" resultType="it.exolab.prospetto.common.CountRow">
 
-    <select id="getGiacenze" parameterType="bean.CriterioRicerca"
-            resultType="bean.GiacenzaCriterio">
-        select
-        WURT1_COD_ACC AS codiceAccisa,
-        WURT1_GIACENZA AS giacenza,
-        WURT1_TIPO_GIACENZA as tipoGiacenza,
-        WURT1_DESCR_PROD as descTipoGiacenza,
-        WURT1_DT_GIAC_INIZ as dataGiacenzaIniziale
-        from WURT1_GIACENZE_CL
-        where WURT1_COD_ACC = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        and WURT1_DT_GIAC_INIZ is not null
-        order by WURT1_TIPO_GIACENZA
-    </select>
-    
-    <select id="countRiga">
-        SELECT *
-        FROM
-            <foreach collection="listaGiacenze"  item="giacenza" open="" separator="," close="">
-                <include refid="condizioniCountRiga"></include>
-            </foreach>
-    </select>
-
-    <select id="calcolaRiga"  parameterType="bean.CriterioRicerca" resultType="bean.ResultRow">
-        SELECT *
-        FROM
-            <foreach collection="listaGiacenze"  item="giacenza" open="" separator="," close="">
-               <include refid="condizioniSelect"></include>
-            </foreach>
+            SELECT *
+            FROM
+                <include refid="countRimanenza"/>
+                <include refid="countIntrodotto"/>
+                <include refid="countEccedenze1"/>
+                <include refid="countEccedenze2"/>
+                <include refid="countEccedenze3"/>
+                <include refid="countEccedenze4"/>
+                <include refid="countErogato"/>
+                <include refid="countCali1"/>
+                <include refid="countCali2"/>
+                <include refid="countCali3"/>
+                <include refid="countCali4"/>
+                <include refid="countRimanenzaContabile"/>
 
     </select>
 
-    <select id="calcolaDataRimanenza" parameterType="bean.CriterioRicerca" resultType="bean.DataRimanenzaRow">
-        SELECT *
-        FROM
-            <foreach collection="listaGiacenze"  item="giacenza" open="" separator="," close="">
-                <include refid="getDataRimanenza"></include>
-            </foreach>
-
+    <select id="selectCampiGiacenza" parameterType="it.exolab.prospetto.dto.CriterioRicercaDTO" resultType="it.exolab.prospetto.common.ResultColumn">
+            SELECT *
+            FROM
+        <if test="countRow.countRimanenza>0">
+            <include refid="getRimanenza"/>
+        </if>
+        <if test="countRow.countIntrodotto>0">
+            <include refid="getIntrodotto"/>
+        </if>
+        <if test="countRow.countEccedenze1>0">
+            <include refid="getEccedenze1"/>
+        </if>
+        <if test="countRow.countEccedenze2>0">
+            <include refid="getEccedenze2"/>
+        </if>
+        <if test="countRow.countEccedenze3>0">
+            <include refid="getEccedenze3"/>
+        </if>
+        <if test="countRow.countEccedenze4>0">
+            <include refid="getEccedenze4"/>
+        </if>
+        <if test="countRow.countErogato>0">
+            <include refid="getErogato"/>
+        </if>
+        <if test="countRow.countCali1>0">
+            <include refid="getCaliAnnotati1"/>
+        </if>
+        <if test="countRow.countCali2>0">
+            <include refid="getCaliAnnotati2"/>
+        </if>
+        <if test="countRow.countCali3>0">
+            <include refid="getCaliAnnotati3"/>
+        </if>
+        <if test="countRow.countCali4>0">
+            <include refid="getCaliAnnotati4"/>
+        </if>
+        <if test="countRow.countRimanenzaContabile>0">
+            <include refid="getRimanenzaContabile"/>
+        </if>
     </select>
 
     <sql id="countRimanenza">
-        (
-        <include refid="condizioniColonna"></include>
+        select count(qta_lt_carbur) as countRimanenza
         from AIDA.wumws_giacenze_cl mov
         where mov.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
           and mov.data_riferimento =
@@ -56,310 +74,302 @@
                  AND t.ID_GIACENZA = mov.ID_GIACENZA
                  AND TRUNC(t.DATA_RIFERIMENTO) <![CDATA[ <= ]]>  TO_DATE(#{dataRiferimento, javaType=String, jdbcType=VARCHAR},'dd/mm/yyyy'))
           AND mov.COD_FISC = 'CALCOLATA'
-          and mov.ID_GIACENZA = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-          ) #{giacenza.descTipoGiacenza}
-
+          and mov.ID_GIACENZA = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}) RIMANZENZA,
     </sql>
 
     <sql id="countIntrodotto">
-        (
-            <include refid="condizioniColonna"></include>
-        FROM AIDA.wumws_carico_cl u
-        WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND u.id_giacenza = #{idGiacenza, javaType=String, jdbcType=VARCHAR}
-        AND u.ID_FLUSSO IN
-        (SELECT S.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL S
-        WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and s.TIPO_ESITO='P'
-        and exists (select 1 from wumws_giornalieri_cl x
-        where x.cod_ditta=s.cod_ditta
-        and x.id_flusso=s.id_flusso
-        and x.num_mov_tot=1))
-        AND u.stato_mov NOT IN ('9', '1')
-        AND u.data_riferimento between
-        to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        AND u.tipo_rich = 'I'
-        AND u.tipo_carico in ('2','4','9')
-        ) #{giacenza.descTipoGiacenza}
+        (select   count(qta_lt_carbur) as countIntrodotto
+         FROM AIDA.wumws_carico_cl u
+         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+           AND u.id_giacenza = #{giacenzaa.idGiacenza, javaType=String, jdbcType=VARCHAR}
+           AND u.ID_FLUSSO IN
+               (SELECT S.ID_FLUSSO
+                FROM AIDA.WUMWS_GUIDA_CL S
+                WHERE S.COD_DITTA = u.cod_ditta
+                  AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
+                  and s.TIPO_ESITO='P'
+                  and exists (select 1 from wumws_giornalieri_cl x
+                              where x.cod_ditta=s.cod_ditta
+                                and x.id_flusso=s.id_flusso
+                                and x.num_mov_tot=1))
+           AND u.stato_mov NOT IN ('9', '1')
+           AND u.data_riferimento between
+             to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+             and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+           AND u.tipo_rich = 'I'
+           AND u.tipo_carico in ('2','4','9')
+        )  introdotto,
     </sql>
 
     <sql id="countEccedenze1">
-        (
-            <include refid="condizioniColonna"></include>
-        FROM AIDA.wumws_carico_cl u
-        WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        AND u.ID_FLUSSO IN (
-        SELECT S.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL S
-        WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE =#{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and s.TIPO_ESITO='P'
-        and exists (select 1 from wumws_giornalieri_cl x
-        where x.cod_ditta=s.cod_ditta
-        and x.id_flusso=s.id_flusso
-        and x.num_mov_tot=1)
-        )
-        AND u.stato_mov NOT IN ('9', '1')
-        AND u.data_riferimento between
-        to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        AND u.tipo_rich = 'I'
-        AND u.tipo_carico = '3'
-        ) #{giacenza.descTipoGiacenza}
-
+        (select count(*) as countEccedenze1
+         FROM AIDA.wumws_carico_cl u
+         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+           AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
+           AND u.ID_FLUSSO IN (
+             SELECT S.ID_FLUSSO
+             FROM AIDA.WUMWS_GUIDA_CL S
+             WHERE S.COD_DITTA = u.cod_ditta
+               AND S.CF_DICHIARANTE =#{codFiscale, javaType=String, jdbcType=VARCHAR}
+               and s.TIPO_ESITO='P'
+               and exists (select 1 from wumws_giornalieri_cl x
+                           where x.cod_ditta=s.cod_ditta
+                             and x.id_flusso=s.id_flusso
+                             and x.num_mov_tot=1)
+         )
+           AND u.stato_mov NOT IN ('9', '1')
+           AND u.data_riferimento between
+             to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+             and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+           AND u.tipo_rich = 'I'
+           AND u.tipo_carico = '3'
+        ) eccedenza1,
     </sql>
-    
-    <sql id="countEccedenze2">
-        (
-            <include refid="condizioniColonna"></include>
-        FROM AIDA.wumws_carico_cl u
-        WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        AND u.ID_FLUSSO IN (
-        SELECT S.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL S
-        WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and s.TIPO_ESITO='P'
-        and exists (select 1 from wumws_giornalieri_cl x
-        where x.cod_ditta=s.cod_ditta
-        and x.id_flusso=s.id_flusso
-        and x.num_mov_tot=1)
-        )
-        AND u.stato_mov NOT IN ('9', '1')
-        AND u.data_riferimento between
-        to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        AND u.tipo_rich = 'I'
-        AND u.tipo_carico = '1') #{giacenza.descTipoGiacenza}
 
+    <sql id="countEccedenze2">
+        (select count(*) as countEccedenze2
+         FROM AIDA.wumws_carico_cl u
+         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+           AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
+           AND u.ID_FLUSSO IN (
+             SELECT S.ID_FLUSSO
+             FROM AIDA.WUMWS_GUIDA_CL S
+             WHERE S.COD_DITTA = u.cod_ditta
+               AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
+               and s.TIPO_ESITO='P'
+               and exists (select 1 from wumws_giornalieri_cl x
+                           where x.cod_ditta=s.cod_ditta
+                             and x.id_flusso=s.id_flusso
+                             and x.num_mov_tot=1)
+         )
+           AND u.stato_mov NOT IN ('9', '1')
+           AND u.data_riferimento between
+             to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+             and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+           AND u.tipo_rich = 'I'
+           AND u.tipo_carico = '1') eccedenza2,
     </sql>
 
     <sql id="countEccedenze3">
-        (
-            <include refid="condizioniColonna"></include>
-        FROM AIDA.wumws_carico_cl u
-        WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        AND u.ID_FLUSSO IN (
-        SELECT S.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL S
-        WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = 'cfDichiarante'
-        and s.TIPO_ESITO='P')
-        and exists
-        (select 1
-        from wumws_giornalieri_cl x
-        where x.cod_ditta = u.cod_ditta
-        and x.data_riferimento >= u.data_riferimento
-        and x.data_riferimento between to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy') and
-        to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and x.num_mov_tot = 1
-        and x.id_flusso IN (SELECT y.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL y
-        WHERE y.COD_DITTA = u.cod_ditta
-        AND y.CF_DICHIARANTE  <![CDATA[ <> ]]>  #{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and y.TIPO_ESITO = 'P'))
-        AND u.stato_mov NOT IN ('9', '1')
-        AND u.data_riferimento between
-        to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        AND u.tipo_rich = 'I'
-        AND u.tipo_carico = '0')#{giacenza.descTipoGiacenza}
+        (select count(*) as countEccedenze3
+         FROM AIDA.wumws_carico_cl u
+         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+           AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
+           AND u.ID_FLUSSO IN (
+             SELECT S.ID_FLUSSO
+             FROM AIDA.WUMWS_GUIDA_CL S
+             WHERE S.COD_DITTA = u.cod_ditta
+               AND S.CF_DICHIARANTE = 'cfDichiarante'
+               and s.TIPO_ESITO='P')
+           and exists
+             (select 1
+              from wumws_giornalieri_cl x
+              where x.cod_ditta = u.cod_ditta
+                and x.data_riferimento >= u.data_riferimento
+                and x.data_riferimento between to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy') and
+                  to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+                and x.num_mov_tot = 1
+                and x.id_flusso IN (SELECT y.ID_FLUSSO
+                                    FROM AIDA.WUMWS_GUIDA_CL y
+                                    WHERE y.COD_DITTA = u.cod_ditta
+                                      AND y.CF_DICHIARANTE  <![CDATA[ <> ]]>  #{piva, javaType=String, jdbcType=VARCHAR}
+                                      and y.TIPO_ESITO = 'P'))
+           AND u.stato_mov NOT IN ('9', '1')
+           AND u.data_riferimento between
+             to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+             and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+           AND u.tipo_rich = 'I'
+           AND u.tipo_carico = '0')eccedenza3,
+    </sql>
 
-    </sql>
-    
     <sql id="countEccedenze4">
-        (
-            <include refid="condizioniColonna"></include>
-        FROM AIDA.wumws_carico_cl u
-        WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        AND u.ID_FLUSSO IN (
-        SELECT S.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL S
-        WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and s.TIPO_ESITO='P'
-        and exists (select 1 from wumws_giornalieri_cl x
-        where x.cod_ditta=s.cod_ditta
-        and x.id_flusso=s.id_flusso
-        and x.num_mov_tot=1)  )
-        AND u.stato_mov NOT IN ('9', '1')
-        AND u.data_riferimento between
-        to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        AND u.tipo_rich = 'I'
-        AND u.tipo_carico = '5')#{giacenza.descTipoGiacenza}
+        (select count(*) as countEccedenze4
+         FROM AIDA.wumws_carico_cl u
+         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+           AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
+           AND u.ID_FLUSSO IN (
+             SELECT S.ID_FLUSSO
+             FROM AIDA.WUMWS_GUIDA_CL S
+             WHERE S.COD_DITTA = u.cod_ditta
+               AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
+               and s.TIPO_ESITO='P'
+               and exists (select 1 from wumws_giornalieri_cl x
+                           where x.cod_ditta=s.cod_ditta
+                             and x.id_flusso=s.id_flusso
+                             and x.num_mov_tot=1)  )
+           AND u.stato_mov NOT IN ('9', '1')
+           AND u.data_riferimento between
+             to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+             and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+           AND u.tipo_rich = 'I'
+           AND u.tipo_carico = '5')eccedenza4,
     </sql>
-    
+
     <sql id="countErogato">
-        (
-            <include refid="condizioniColonna"></include>
-        FROM AIDA.wumws_scarico_cl u
-        WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        AND u.ID_FLUSSO IN
-        (SELECT S.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL S
-        WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and s.TIPO_ESITO='P'
-        and exists (select 1 from wumws_giornalieri_cl x
-        where x.cod_ditta=s.cod_ditta
-        and x.id_flusso=s.id_flusso
-        and x.num_mov_tot=1)
-        )
-        AND u.stato_mov NOT IN ('9', '1')
-        AND u.data_riferimento between
-        to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        AND u.tipo_rich = 'I'
-        AND u.tipo_scarico in ('1','2','3','6','9'))#{giacenza.descTipoGiacenza}
+        (select count(*) as countErogato
+         FROM AIDA.wumws_scarico_cl u
+         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+           AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
+           AND u.ID_FLUSSO IN
+               (SELECT S.ID_FLUSSO
+                FROM AIDA.WUMWS_GUIDA_CL S
+                WHERE S.COD_DITTA = u.cod_ditta
+                  AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
+                  and s.TIPO_ESITO='P'
+                  and exists (select 1 from wumws_giornalieri_cl x
+                              where x.cod_ditta=s.cod_ditta
+                                and x.id_flusso=s.id_flusso
+                                and x.num_mov_tot=1)
+               )
+           AND u.stato_mov NOT IN ('9', '1')
+           AND u.data_riferimento between
+             to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+             and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+           AND u.tipo_rich = 'I'
+           AND u.tipo_scarico in ('1','2','3','6','9'))erogato,
     </sql>
 
     <sql id="countCali1">
-        (
-            <include refid="condizioniColonna"></include>
-        FROM AIDA.wumws_scarico_cl u
-        WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        AND u.ID_FLUSSO IN (
-        SELECT S.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL S
-        WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and s.TIPO_ESITO='P'
-        and exists (select 1 from wumws_giornalieri_cl x
-        where x.cod_ditta=s.cod_ditta
-        and x.id_flusso=s.id_flusso
-        and x.num_mov_tot=1))
-        AND u.stato_mov NOT IN ('9', '1')
-        AND u.data_riferimento between
-        to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        AND u.tipo_rich = 'I'
-        AND u.tipo_scarico = '4'
-        )#{giacenza.descTipoGiacenza}
-
+        (select count(*) as countCali1
+         FROM AIDA.wumws_scarico_cl u
+         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+           AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
+           AND u.ID_FLUSSO IN (
+             SELECT S.ID_FLUSSO
+             FROM AIDA.WUMWS_GUIDA_CL S
+             WHERE S.COD_DITTA = u.cod_ditta
+               AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
+               and s.TIPO_ESITO='P'
+               and exists (select 1 from wumws_giornalieri_cl x
+                           where x.cod_ditta=s.cod_ditta
+                             and x.id_flusso=s.id_flusso
+                             and x.num_mov_tot=1))
+           AND u.stato_mov NOT IN ('9', '1')
+           AND u.data_riferimento between
+             to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+             and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+           AND u.tipo_rich = 'I'
+           AND u.tipo_scarico = '4'
+        )cali1,
     </sql>
 
     <sql id="countCali2">
-        (
-            <include refid="condizioniColonna"></include>
-        FROM AIDA.wumws_scarico_cl u
-        WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        AND u.ID_FLUSSO IN (
-        SELECT S.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL S
-        WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and s.TIPO_ESITO='P'
-        and exists (select 1 from wumws_giornalieri_cl x
-        where x.cod_ditta=s.cod_ditta
-        and x.id_flusso=s.id_flusso
-        and x.num_mov_tot=1)
-        )
-        AND u.stato_mov NOT IN ('9', '1')
-        AND u.data_riferimento between
-        to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        AND u.tipo_rich = 'I'
-        AND u.tipo_scarico = '5'
-        )#{giacenza.descTipoGiacenza}
+        (select count(*) as countCali2
+         FROM AIDA.wumws_scarico_cl u
+         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+           AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
+           AND u.ID_FLUSSO IN (
+             SELECT S.ID_FLUSSO
+             FROM AIDA.WUMWS_GUIDA_CL S
+             WHERE S.COD_DITTA = u.cod_ditta
+               AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
+               and s.TIPO_ESITO='P'
+               and exists (select 1 from wumws_giornalieri_cl x
+                           where x.cod_ditta=s.cod_ditta
+                             and x.id_flusso=s.id_flusso
+                             and x.num_mov_tot=1)
+         )
+           AND u.stato_mov NOT IN ('9', '1')
+           AND u.data_riferimento between
+             to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+             and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+           AND u.tipo_rich = 'I'
+           AND u.tipo_scarico = '5'
+        )cali2,
     </sql>
-    
+
     <sql id="countCali3">
-        (
-            <include refid="condizioniColonna"></include>
-        FROM AIDA.WUMWS_scarico_cl u
-        WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        AND u.ID_FLUSSO IN (
-        SELECT S.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL S
-        WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and s.TIPO_ESITO='P'
-        and exists (select 1 from wumws_giornalieri_cl x
-        where x.cod_ditta=s.cod_ditta
-        and x.id_flusso=s.id_flusso
-        and x.num_mov_tot=1)
-        )
-        AND u.stato_mov NOT IN ('9', '1')
-        AND u.data_riferimento between
-        to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        AND u.tipo_rich = 'I'
-        AND u.tipo_scarico = '7'
-        )#{giacenza.descTipoGiacenza}
+        (select count(*) as countCali3
+         FROM AIDA.WUMWS_scarico_cl u
+         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+           AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
+           AND u.ID_FLUSSO IN (
+             SELECT S.ID_FLUSSO
+             FROM AIDA.WUMWS_GUIDA_CL S
+             WHERE S.COD_DITTA = u.cod_ditta
+               AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
+               and s.TIPO_ESITO='P')
+           and exists
+             (select 1
+              from wumws_giornalieri_cl x
+              where x.cod_ditta = u.cod_ditta
+                and x.data_riferimento >= u.data_riferimento
+                and x.data_riferimento between to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy') and
+                  to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+                and x.num_mov_tot = 1
+                and x.id_flusso IN (SELECT y.ID_FLUSSO
+                                    FROM AIDA.WUMWS_GUIDA_CL y
+                                    WHERE y.COD_DITTA = u.cod_ditta
+                                      AND y.CF_DICHIARANTE  <![CDATA[ <> ]]>  #{piva, javaType=String, jdbcType=VARCHAR}
+                                      and y.TIPO_ESITO = 'P'))
+           AND u.stato_mov NOT IN ('9', '1')
+           AND u.data_riferimento between
+             to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+             and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+           AND u.tipo_rich = 'I'
+           AND u.tipo_scarico = '0'
+        )cali3,
     </sql>
-    
+
     <sql id="countCali4">
-        (
-            <include refid="condizioniColonna"></include>
-        FROM AIDA.WUMWS_scarico_cl u
-        WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        AND u.ID_FLUSSO IN (
-        SELECT S.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL S
-        WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and s.TIPO_ESITO='P'
-        and exists (select 1 from wumws_giornalieri_cl x
-        where x.cod_ditta=s.cod_ditta
-        and x.id_flusso=s.id_flusso
-        and x.num_mov_tot=1)
-        )
-        AND u.stato_mov NOT IN ('9', '1')
-        AND u.data_riferimento between
-        to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        AND u.tipo_rich = 'I'
-        AND u.tipo_scarico = '7'
-        )#{giacenza.descTipoGiacenza}
+
+        (select count(*) as countCali4
+         FROM AIDA.WUMWS_scarico_cl u
+         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+           AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
+           AND u.ID_FLUSSO IN (
+             SELECT S.ID_FLUSSO
+             FROM AIDA.WUMWS_GUIDA_CL S
+             WHERE S.COD_DITTA = u.cod_ditta
+               AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
+               and s.TIPO_ESITO='P'
+               and exists (select 1 from wumws_giornalieri_cl x
+                           where x.cod_ditta=s.cod_ditta
+                             and x.id_flusso=s.id_flusso
+                             and x.num_mov_tot=1)
+         )
+           AND u.stato_mov NOT IN ('9', '1')
+           AND u.data_riferimento between
+             to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+             and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+           AND u.tipo_rich = 'I'
+           AND u.tipo_scarico = '7'
+        )cali4,
 
     </sql>
-    
+
     <sql id="countRimanenzaContabile">
-        (
-            <include refid="condizioniColonna"></include>
-        from AIDA.WUMWS_giacenze_cl mov
-        where mov.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        and mov.data_riferimento =
-        (SELECT MAX(TRUNC(t.data_riferimento))
-        from AIDA.WUMWS_giacenze_cl t
-        where t.cod_ditta = mov.cod_ditta
-        AND t.ID_GIACENZA = mov.ID_GIACENZA
-        AND TRUNC(t.DATA_RIFERIMENTO) between to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy'))
-        AND COD_FISC = 'CALCOLATA'
-        and mov.ID_GIACENZA = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        AND ID_FLUSSO IN (SELECT S.ID_FLUSSO
-        FROM AIDA.WUMWS_GUIDA_CL S
-        WHERE S.COD_DITTA = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and s.TIPO_ESITO='P'
-        and exists (select 1 from wumws_giornalieri_cl x
-        where x.cod_ditta=s.cod_ditta
-        and x.id_flusso=s.id_flusso
-        and x.num_mov_tot=1)
-        )
-        )#{giacenza.descTipoGiacenza}
+
+        (select count(*) as countRimanenzaContabile
+         from AIDA.WUMWS_giacenze_cl mov
+         where mov.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+           and mov.data_riferimento =
+               (SELECT MAX(TRUNC(t.data_riferimento))
+                from AIDA.WUMWS_giacenze_cl t
+                where t.cod_ditta = mov.cod_ditta
+                  AND t.ID_GIACENZA = mov.ID_GIACENZA
+                  AND TRUNC(t.DATA_RIFERIMENTO) between to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+                    and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy'))
+           AND COD_FISC = 'CALCOLATA'
+           and mov.ID_GIACENZA = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
+           AND ID_FLUSSO IN (SELECT S.ID_FLUSSO
+                             FROM AIDA.WUMWS_GUIDA_CL S
+                             WHERE S.COD_DITTA = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+                               AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
+                               and s.TIPO_ESITO='P'
+                               and exists (select 1 from wumws_giornalieri_cl x
+                                           where x.cod_ditta=s.cod_ditta
+                                             and x.id_flusso=s.id_flusso
+                                             and x.num_mov_tot=1)
+         )
+        )rimanenzaContabile
 
     </sql>
 
     <sql id="getRimanenza">
-        (
-            <include refid="condizioniGetRimanenza"></include>
-        from AIDA.wumws_giacenze_cl mov
-        where mov.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+        (select 	decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as rimanenza
+	    from AIDA.wumws_giacenze_cl mov
+	    where mov.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
         and mov.data_riferimento =
         (SELECT MAX(TRUNC(t.data_riferimento))
         from AIDA.wumws_giacenze_cl t
@@ -368,12 +378,16 @@
         AND TRUNC(t.DATA_RIFERIMENTO) <![CDATA[ <= ]]> TO_DATE(#{dataRiferimento, javaType=String, jdbcType=VARCHAR},'dd/mm/yyyy'))
         AND mov.COD_FISC = 'CALCOLATA'
         and mov.ID_GIACENZA = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        ) #{giacenza.descTipoGiacenza}
+        ) rimanenza
     </sql>
 
     <sql id="getIntrodotto">
-        (
-            <include refid="condizioniGet"></include>
+
+        <if test="firstRow!=it.exolab.prospetto.enums.Row.INTRODOTTO">
+            ,
+        </if>
+
+            <include refid="condizioniSelect"/> AS introdotto
         FROM AIDA.wumws_carico_cl u
         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
         AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
@@ -381,7 +395,7 @@
         (SELECT S.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL S
         WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
+        AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
         )
         AND u.stato_mov NOT IN ('9', '1')
         AND u.data_riferimento between
@@ -389,12 +403,17 @@
         and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
         AND u.tipo_rich = 'I'
         AND u.tipo_carico in ('2','4','9')
-        ) #{giacenza.descTipoGiacenza}
+        ) introdotto
+
     </sql>
 
     <sql id="getEccedenze1">
-        (
-            <include refid="condizioniGet"></include>
+
+            <if test="firstRow!=it.exolab.prospetto.enums.Row.ECCEDENZE_ANNOTATE_1">
+                ,
+            </if>
+
+            <include refid="condizioniSelect"/> AS eccedenzeAnnotate1
         FROM AIDA.wumws_carico_cl u
         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
         AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
@@ -402,7 +421,7 @@
         SELECT S.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL S
         WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
+        AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
         )
         AND u.stato_mov NOT IN ('9', '1')
         AND u.data_riferimento between
@@ -410,12 +429,17 @@
         and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
         AND u.tipo_rich = 'I'
         AND u.tipo_carico = '3'
-        ) #{giacenza.descTipoGiacenza}
+        ) eccedenze1
+
     </sql>
 
     <sql id="getEccedenze2">
-        (
-            <include refid="condizioniGet"></include>
+
+            <if test="firstRow!=it.exolab.prospetto.enums.Row.ECCEDENZE_ANNOTATE_2">
+                ,
+            </if>
+
+            <include refid="condizioniSelect"/> AS eccedenzeAnnotate2
         FROM AIDA.wumws_carico_cl u
         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
         AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
@@ -431,13 +455,17 @@
         and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
         AND u.tipo_rich = 'I'
         AND u.tipo_carico = '1'
-        )  #{giacenza.descTipoGiacenza}
+        ) eccedenze2
 
     </sql>
-    
+
     <sql id="getEccedenze3">
-        (
-            <include refid="condizioniGet"></include>
+
+            <if test="firstRow!=it.exolab.prospetto.enums.Row.ECCEDENZE_ANNOTATE_3">
+                ,
+            </if>
+
+            <include refid="condizioniSelect"/> AS eccedenzeAnnotate3
         FROM AIDA.wumws_carico_cl u
         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
         AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
@@ -445,7 +473,7 @@
         SELECT S.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL S
         WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
+        AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
         and s.TIPO_ESITO='P')
         and exists
         (select 1
@@ -458,7 +486,7 @@
         and x.id_flusso IN (SELECT y.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL y
         WHERE y.COD_DITTA = u.cod_ditta
-        AND y.CF_DICHIARANTE <![CDATA[ <> ]]> #{codFiscale, javaType=String, jdbcType=VARCHAR}
+        AND y.CF_DICHIARANTE <![CDATA[ <> ]]> #{piva, javaType=String, jdbcType=VARCHAR}
         and y.TIPO_ESITO = 'P'))
         AND u.stato_mov NOT IN ('9', '1')
         AND u.data_riferimento between
@@ -466,12 +494,17 @@
         and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
         AND u.tipo_rich = 'I'
         AND u.tipo_carico = '0'
-        )  #{giacenza.descTipoGiacenza}
+        ) eccedenze3
+
     </sql>
 
     <sql id="getEccedenze4">
-        (
-            <include refid="condizioniGet"></include>
+
+        <if test="firstRow!=it.exolab.prospetto.enums.Row.ECCEDENZE_ANNOTATE_4">
+            ,
+        </if>
+
+            <include refid="condizioniSelect"/> AS eccedenzeAnnotate4
         FROM AIDA.wumws_carico_cl u
         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
         AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
@@ -479,7 +512,7 @@
         SELECT S.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL S
         WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
+        AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
         )
         AND u.stato_mov NOT IN ('9', '1')
         AND u.data_riferimento between
@@ -487,12 +520,17 @@
         and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
         AND u.tipo_rich = 'I'
         AND u.tipo_carico = '5'
-        ) #{giacenza.descTipoGiacenza}
+        )eccedenze4
+
     </sql>
-    
+
     <sql id="getErogato">
-        (
-            <include refid="condizioniGet"></include>
+
+            <if test="firstRow!=it.exolab.prospetto.enums.Row.EROGATO">
+                ,
+            </if>
+
+            <include refid="condizioniSelect"/> AS erogato
         FROM AIDA.wumws_scarico_cl u
         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
         AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
@@ -500,7 +538,7 @@
         (SELECT S.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL S
         WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
+        AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
         )
         AND u.stato_mov NOT IN ('9', '1')
         AND u.data_riferimento between
@@ -508,12 +546,17 @@
         and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
         AND u.tipo_rich = 'I'
         AND u.tipo_scarico in ('1','2','3','6','9')
-        ) #{giacenza.descTipoGiacenza}
+        )errogato
+
     </sql>
 
-    <sql id="getCali1">
-        (
-            <include refid="condizioniGet"></include>
+    <sql id="getCaliAnnotati1">
+
+            <if test="firstRow!=it.exolab.prospetto.enums.Row.CALI_ANNOTATI_1">
+                ,
+            </if>
+
+             <include refid="condizioniSelect"/> AS caliAnnotati1
         FROM AIDA.wumws_scarico_cl u
         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
         AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
@@ -521,7 +564,7 @@
         SELECT S.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL S
         WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
+        AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
         )
         AND u.stato_mov NOT IN ('9', '1')
         AND u.data_riferimento between
@@ -529,12 +572,17 @@
         and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
         AND u.tipo_rich = 'I'
         AND u.tipo_scarico = '4'
-        ) #{giacenza.descTipoGiacenza}
+        )cali1
+
     </sql>
 
-    <sql id="getCali2">
-        (
-            <include refid="condizioniGet"></include>
+    <sql id="getCaliAnnotati2">
+
+            <if test="firstRow!=it.exolab.prospetto.enums.Row.CALI_ANNOTATI_2">
+                ,
+            </if>
+
+            <include refid="condizioniSelect"/> AS caliAnnotati2
         FROM AIDA.wumws_scarico_cl u
         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
         AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
@@ -542,7 +590,7 @@
         SELECT S.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL S
         WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
+        AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
         )
         AND u.stato_mov NOT IN ('9', '1')
         AND u.data_riferimento between
@@ -550,20 +598,24 @@
         and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
         AND u.tipo_rich = 'I'
         AND u.tipo_scarico = '5'
-        ) #{giacenza.descTipoGiacenza}
+        )cali2
     </sql>
 
-    <sql id="getCali3">
-        (
-            <include refid="condizioniGet"></include>
+    <sql id="getCaliAnnotati3">
+
+            <if test="firstRow!=it.exolab.prospetto.enums.Row.CALI_ANNOTATI_3">
+                ,
+            </if>
+
+            <include refid="condizioniSelect"/> AS caliAnnotati3
         FROM AIDA.WUMWS_scarico_cl u
-        WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+		WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
         AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
         AND u.ID_FLUSSO IN (
         SELECT S.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL S
         WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
+        AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
         and s.TIPO_ESITO='P')
         and exists
         (select 1
@@ -576,7 +628,7 @@
         and x.id_flusso IN (SELECT y.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL y
         WHERE y.COD_DITTA = u.cod_ditta
-        AND y.CF_DICHIARANTE <![CDATA[ <> ]]> #{codFiscale, javaType=String, jdbcType=VARCHAR}
+        AND y.CF_DICHIARANTE <![CDATA[ <> ]]> #{piva, javaType=String, jdbcType=VARCHAR}
         and y.TIPO_ESITO = 'P'))
         AND u.stato_mov NOT IN ('9', '1')
         AND u.data_riferimento between
@@ -584,12 +636,17 @@
         and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
         AND u.tipo_rich = 'I'
         AND u.tipo_scarico = '0'
-        ) #{giacenza.descTipoGiacenza}
+        )cali3
+
     </sql>
 
-    <sql id="getCali4">
-        (
-            <include refid="condizioniGet"></include>
+    <sql id="getCaliAnnotati4">
+
+            <if test="firstRow!=it.exolab.prospetto.enums.Row.CALI_ANNOTATI_4">
+                ,
+            </if>
+
+            <include refid="condizioniSelect"/> AS caliAnnotati4
         FROM AIDA.WUMWS_scarico_cl u
         WHERE u.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
         AND u.id_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
@@ -597,7 +654,7 @@
         SELECT S.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL S
         WHERE S.COD_DITTA = u.cod_ditta
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
+        AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
         )
         AND u.stato_mov NOT IN ('9', '1')
         AND u.data_riferimento between
@@ -605,350 +662,60 @@
         and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
         AND u.tipo_rich = 'I'
         AND u.tipo_scarico = '7'
-        )  #{giacenza.descTipoGiacenza}
+        ) cali4
 
     </sql>
-
+    
     <sql id="getRimanenzaContabile">
-        (
-            <include refid="condizioniGet"></include>
-        from AIDA.WUMWS_giacenze_cl mov
-        where mov.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        and mov.data_riferimento =
+
+        <if test="firstRow!=it.exolab.prospetto.enums.Row.RIMANENZA_CONTABILE">
+            ,
+        </if>
+
+        <if test='giacenza.tipoGiacenza.equals("O")'>
+            (
+            SELECT decode((mov.qta_kg), null, 0, (mov.qta_kg)) AS rimanenzaContabile
+        </if>
+        <if test='!giacenza.tipoGiacenza.equals("O")'>
+            (
+            SELECT decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) AS rimanenzaContabile
+        </if>
+        FROM AIDA.WUMWS_giacenze_cl mov
+        WHERE mov.cod_ditta = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
+        AND mov.data_riferimento =
         (SELECT MAX(TRUNC(t.data_riferimento))
-        from AIDA.WUMWS_giacenze_cl t
-        where t.cod_ditta = mov.cod_ditta
+        FROM AIDA.WUMWS_giacenze_cl t
+        WHERE t.cod_ditta = mov.cod_ditta
         AND t.ID_GIACENZA = mov.ID_GIACENZA
-        AND TRUNC(t.DATA_RIFERIMENTO) between to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
-        and to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy'))
+        AND TRUNC(t.DATA_RIFERIMENTO) BETWEEN to_date(#{dataInvioDa, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy')
+        AND to_date(#{dataInvioA, javaType=String, jdbcType=VARCHAR}, 'dd/mm/yyyy'))
         AND COD_FISC = 'CALCOLATA'
-        and mov.ID_GIACENZA = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
+        AND mov.ID_GIACENZA = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
         AND ID_FLUSSO IN (SELECT S.ID_FLUSSO
         FROM AIDA.WUMWS_GUIDA_CL S
         WHERE S.COD_DITTA = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        AND S.CF_DICHIARANTE = #{codFiscale, javaType=String, jdbcType=VARCHAR}
-        and s.TIPO_ESITO='P'
-        and exists (select 1 from wumws_giornalieri_cl x
-        where x.cod_ditta=s.cod_ditta
-        and x.id_flusso=s.id_flusso
-        and x.num_mov_tot=1)
+        AND S.CF_DICHIARANTE = #{piva, javaType=String, jdbcType=VARCHAR}
+        AND s.TIPO_ESITO='P'
+        AND exists (SELECT 1 FROM wumws_giornalieri_cl x
+        WHERE x.cod_ditta=s.cod_ditta
+        AND x.id_flusso=s.id_flusso
+        AND x.num_mov_tot=1)
         )
-        ) #{giacenza.descTipoGiacenza}
+        )rimanenzaContabile
 
-    </sql>
-
-    <sql id="getDataRimanenza">
-        (
-            <include refid="condizioniDataRimanenza"></include>
-        from WURT1_GIACENZE_CL
-        where wurt1_cod_acc = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
-        and wurt1_giacenza = #{giacenza.idGiacenza, javaType=String, jdbcType=VARCHAR}
-        and wurt1_dt_giac_iniz <![CDATA[ <= ]]> SYSDATE
-        )#{giacenza.descTipoGiacenza}
-    </sql>
-
-    <sql id="condizioniColonna">
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_1">
-            select count(*) as countBenzina1
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_2">
-            select count(*) as countBenzina2
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_3">
-            select count(*) as countBenzina3
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_4">
-            select count(*) as countBenzina4
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_5">
-            select count(*) as countBenzina5
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_ALTRO">
-            select count(*) as countBenzinaAltro
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_1">
-            select count(*) as countGasolio1
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_2">
-            select count(*) as countGasolio2
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_3">
-            select count(*) as countGasolio3
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_4">
-            select count(*) as countGasolio4
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_5">
-            select count(*) as countGasolio5
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_ALTRO">
-            select count(*) as countGasolio1
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GPL">
-            select count(*) as countGpl
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.OLIO_LUBRIFICANTE">
-            select count(*) as countOlio
-        </if>
-    </sql>
-
-    <sql id="condizioniGetRimanenza">
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_1">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoBenzina1
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_2">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoBenzina2
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_3">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoBenzina3
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_4">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoBenzina4
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_5">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoBenzina5
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_ALTRO">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoBenzinaAltro
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_1">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoGasolio1
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_2">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoGasolio2
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_3">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoGasolio3
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_4">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoGasolio4
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_5">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoGasolio5
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_ALTRO">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_lt_carbur)) as risultatoGasolioAltro
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GPL">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_kg)) as risultatoGpl
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.OLIO_LUBRIFICANTE">
-            select decode((mov.qta_lt_carbur), null, 0, (mov.qta_kg)) as risultatoOlio
-        </if>
-
-    </sql>
-
-    <sql id="condizioniGet">
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_1">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoBenzina1
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_2">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoBenzina2
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_3">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoBenzina3
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_4">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoBenzina4
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_5">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoBenzina5
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_ALTRO">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoBenzinaAltro
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_1">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoGasolio1
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_2">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoGasolio2
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_3">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoGasolio3
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_4">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoGasolio4
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_5">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoGasolio5
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_ALTRO">
-            select nvl(SUM(u.qta_kg),0) AS  risultatoGasolioAltro
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GPL">
-            select nvl(SUM(u.qta_lt_carbur),0) AS  risultatoGpl
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.OLIO_LUBRIFICANTE">
-            select nvl(SUM(u.qta_lt_carbur),0) AS  risultatoOlio
-        </if>
     </sql>
 
     <sql id="condizioniSelect">
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_1 and countColonne.countBenzina1>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_2 and countColonne.countBenzina2>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_3 and countColonne.countBenzina3>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_4 and countColonne.countBenzina4>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_5 and countColonne.countBenzina5>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_ALTRO and countColonne.countBenzinaAltro>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_1 and countColonne.countGasolio1>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_2 and countColonne.countGasolio2>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_3 and countColonne.countGasolio3>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_4 and countColonne.countGasolio4>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_5 and countColonne.countGasolio5>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_ALTRO and countColonne.countGasolioAltro>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GPL and countColonne.countGpl>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.OLIO_LUBRIFICANTE and countColonne.countOlio>0">
-            <include refid="condizioniRiga"></include>
-        </if>
-    </sql>
 
-    <sql id="condizioniRiga">
-        <if test="rigaRiferimento == enums.RigaRiferimento.RIMANENZA">
-            <include refid="getRimanenza"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.INTRODOTT">
-            <include refid="getIntrodotto"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.ECCEDENZE_1">
-            <include refid="getEccedenze1"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.ECCEDENZE_2">
-            <include refid="getEccedenze2"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.ECCEDENZE_3">
-            <include refid="getEccedenze3"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.ECCEDENZE_4">
-            <include refid="getEccedenze4"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.EROGATO">
-            <include refid="getErogato"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.CALI_ANNOTATI_1">
-            <include refid="getCali1"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.CALI_ANNOTATI_2">
-            <include refid="getCali2"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.CALI_ANNOTATI_3">
-            <include refid="getCali3"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.CALI_ANNOTATI_4">
-            <include refid="getCali4"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.RIMANENZA_CONTABILE">
-            <include refid="getRimanenzaContabile"></include>
-        </if>
-    </sql>
-
-    <sql id="condizioniCountRiga">
-        <if test="rigaRiferimento == enums.RigaRiferimento.RIMANENZA">
-            <include refid="countRimanenza"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.INTRODOTT">
-            <include refid="countIntrodotto"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.ECCEDENZE_1">
-            <include refid="countEccedenze1"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.ECCEDENZE_2">
-            <include refid="countEccedenze2"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.ECCEDENZE_3">
-            <include refid="countEccedenze3"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.ECCEDENZE_4">
-            <include refid="countEccedenze4"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.EROGATO">
-            <include refid="countErogato"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.CALI_ANNOTATI_1">
-            <include refid="countCali1"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.CALI_ANNOTATI_2">
-            <include refid="countCali2"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.CALI_ANNOTATI_3">
-            <include refid="countCali3"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.CALI_ANNOTATI_4">
-            <include refid="countCali4"></include>
-        </if>
-        <if test="rigaRiferimento == enums.RigaRiferimento.RIMANENZA_CONTABILE">
-            <include refid="countRimanenzaContabile"></include>
-        </if>
-    </sql>
-
-    <sql id="condizioniDataRimanenza">
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_1">
-            select wurt1_dt_giac_iniz   as   dataBenzina1
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_2">
-            select wurt1_dt_giac_iniz   as   dataBenzina2
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_3">
-            select wurt1_dt_giac_iniz   as   dataBenzina3
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_4">
-            select wurt1_dt_giac_iniz   as   dataBenzina4
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_5">
-            select wurt1_dt_giac_iniz   as   dataBenzina5
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.BENZINA_ALTRO">
-            select wurt1_dt_giac_iniz   as   dataBenzinaAltro
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_1">
-            select wurt1_dt_giac_iniz   as   dataGasolio1
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_2">
-            select wurt1_dt_giac_iniz   as   dataGasolio2
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_3">
-            select wurt1_dt_giac_iniz   as   dataGasolio3
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_4">
-            select wurt1_dt_giac_iniz   as   dataGasolio4
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_5">
-            select wurt1_dt_giac_iniz   as   dataGasolio5
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GASOLIO_ALTRO">
-            select wurt1_dt_giac_iniz   as   dataGasolioAltro
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.GPL">
-            select wurt1_dt_giac_iniz   as   dataGpl
-        </if>
-        <if test="giacenza.colonnaRiferimento == enums.ColonnaRiferimento.OLIO_LUBRIFICANTE">
-            select wurt1_dt_giac_iniz   as   dataOlio
-        </if>
+            <if test='giacenza.tipoGiacenza.equals("O")'>
+                (
+                SELECT nvl(SUM(u.qta_kg),0)
+            </if>
+            <if test='!giacenza.tipoGiacenza.equals("O")'>
+                (
+                SELECT nvl(SUM(u.qta_lt_carbur),0)
+            </if>
 
     </sql>
+
 </mapper>

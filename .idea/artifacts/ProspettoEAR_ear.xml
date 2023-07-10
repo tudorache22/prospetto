@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="ear" name="ProspettoEAR:ear">
+    <output-path>$PROJECT_DIR$/Prospetto/ProspettoEAR/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>ProspettoEAR</module>
+        <packaging>ear</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="ProspettoEAR-1.0-SNAPSHOT.ear">
+      <element id="artifact" artifact-name="ProspettoEAR:ear exploded" />
+    </root>
+  </artifact>
+</component>

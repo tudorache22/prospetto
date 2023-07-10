@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="it.exolab.prospetto.AppTest" time="0.069" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="it.exolab.prospetto.AppTest" time="0.041" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="windows"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
     <property name="java.specification.version" value="11"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.class.path" value="D:\progetti\prospetto\Prospetto\ProspettoUtilities\target\test-classes;D:\progetti\prospetto\Prospetto\ProspettoUtilities\target\classes;C:\Users\Exolab\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Exolab\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Exolab\.m2\repository\javax\xml\bind\jaxb-api\2.2.12\jaxb-api-2.2.12.jar;C:\Users\Exolab\.m2\repository\com\sun\xml\bind\jaxb-impl\2.2.11\jaxb-impl-2.2.11.jar;"/>
+    <property name="java.class.path" value="D:\progetti\prospettoVerticale\prospetto\Prospetto\ProspettoUtilities\target\test-classes;D:\progetti\prospettoVerticale\prospetto\Prospetto\ProspettoUtilities\target\classes;C:\Users\Exolab\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Exolab\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Exolab\.m2\repository\javax\xml\bind\jaxb-api\2.2.12\jaxb-api-2.2.12.jar;C:\Users\Exolab\.m2\repository\com\sun\xml\bind\jaxb-impl\2.2.11\jaxb-impl-2.2.11.jar;C:\Users\Exolab\.m2\repository\org\projectlombok\lombok\1.18.24\lombok-1.18.24.jar;"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="user.variant" value=""/>
@@ -17,9 +17,9 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="IT"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-11.0.13\bin"/>
-    <property name="sun.java.command" value="C:\Users\Exolab\AppData\Local\Temp\surefire11967782225394919572\surefirebooter11067428364615932878.jar C:\Users\Exolab\AppData\Local\Temp\surefire11967782225394919572 2023-07-05T16-39-12_464-jvmRun1 surefire11440160365800318951tmp surefire_011491904947716668306tmp"/>
+    <property name="sun.java.command" value="C:\Users\Exolab\AppData\Local\Temp\surefire3188093328863184724\surefirebooter11013630544321238510.jar C:\Users\Exolab\AppData\Local\Temp\surefire3188093328863184724 2023-07-07T16-55-24_075-jvmRun1 surefire18256622718733118326tmp surefire_011839285255556668131tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="D:\progetti\prospetto\Prospetto\ProspettoUtilities\target\test-classes;D:\progetti\prospetto\Prospetto\ProspettoUtilities\target\classes;C:\Users\Exolab\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Exolab\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Exolab\.m2\repository\javax\xml\bind\jaxb-api\2.2.12\jaxb-api-2.2.12.jar;C:\Users\Exolab\.m2\repository\com\sun\xml\bind\jaxb-impl\2.2.11\jaxb-impl-2.2.11.jar;"/>
+    <property name="surefire.test.class.path" value="D:\progetti\prospettoVerticale\prospetto\Prospetto\ProspettoUtilities\target\test-classes;D:\progetti\prospettoVerticale\prospetto\Prospetto\ProspettoUtilities\target\classes;C:\Users\Exolab\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Exolab\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Exolab\.m2\repository\javax\xml\bind\jaxb-api\2.2.12\jaxb-api-2.2.12.jar;C:\Users\Exolab\.m2\repository\com\sun\xml\bind\jaxb-impl\2.2.11\jaxb-impl-2.2.11.jar;C:\Users\Exolab\.m2\repository\org\projectlombok\lombok\1.18.24\lombok-1.18.24.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\Exolab"/>
     <property name="user.language" value="it"/>
@@ -27,13 +27,13 @@
     <property name="java.version.date" value="2021-10-19"/>
     <property name="java.home" value="C:\Program Files\Java\jdk-11.0.13"/>
     <property name="file.separator" value="\"/>
-    <property name="basedir" value="D:\progetti\prospetto\Prospetto\ProspettoUtilities"/>
+    <property name="basedir" value="D:\progetti\prospettoVerticale\prospetto\Prospetto\ProspettoUtilities"/>
     <property name="java.vm.compressedOopsMode" value="Zero based"/>
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="C:\Users\Exolab\AppData\Local\Temp\surefire11967782225394919572\surefirebooter11067428364615932878.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Exolab\AppData\Local\Temp\surefire3188093328863184724\surefirebooter11013630544321238510.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="11.0.13+10-LTS-370"/>
@@ -48,7 +48,7 @@
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
     <property name="java.io.tmpdir" value="C:\Users\Exolab\AppData\Local\Temp\"/>
     <property name="java.version" value="11.0.13"/>
-    <property name="user.dir" value="D:\progetti\prospetto\Prospetto\ProspettoUtilities"/>
+    <property name="user.dir" value="D:\progetti\prospettoVerticale\prospetto\Prospetto\ProspettoUtilities"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
@@ -60,5 +60,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="shouldAnswerWithTrue" classname="it.exolab.prospetto.AppTest" time="0.004"/>
+  <testcase name="shouldAnswerWithTrue" classname="it.exolab.prospetto.AppTest" time="0.002"/>
 </testsuite>

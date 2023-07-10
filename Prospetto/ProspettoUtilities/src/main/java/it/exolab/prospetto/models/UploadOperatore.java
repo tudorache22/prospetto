@@ -1,5 +1,7 @@
-package models;
+package it.exolab.prospetto.models;
 
+import it.exolab.prospetto.models.DatiComuni;
+import it.exolab.prospetto.models.Prospetto;
 import lombok.Data;
 
 import javax.xml.bind.annotation.*;

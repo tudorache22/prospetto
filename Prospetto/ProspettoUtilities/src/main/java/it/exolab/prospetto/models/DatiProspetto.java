@@ -1,4 +1,4 @@
-package models;
+package it.exolab.prospetto.models;
 
 import lombok.Data;
 

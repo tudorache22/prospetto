@@ -1,5 +1,6 @@
 package it.exolab.prospetto.rest;
 
+/*
 import it.exolab.prospetto.controller.ProspettoControllerInterface;
 import it.exolab.prospetto.models.CriterioRicerca;
 import it.exolab.prospetto.models.Prospetto;
@@ -12,8 +13,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 @Path("/prospetto")
+*/
 public class ProspettoRest {
-
+    /*
     @EJB
     private ProspettoControllerInterface prospettoController;
 
@@ -32,4 +34,6 @@ public class ProspettoRest {
             return Response.status(500).build();
         }
     }
+    */
+
 }

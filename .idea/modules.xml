@@ -2,6 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Prospetto/Prospetto.iml" filepath="$PROJECT_DIR$/Prospetto/Prospetto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Prospetto/ProspettoEAR/ProspettoEAR.iml" filepath="$PROJECT_DIR$/Prospetto/ProspettoEAR/ProspettoEAR.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Prospetto/ProspettoEJB/ProspettoEJB.iml" filepath="$PROJECT_DIR$/Prospetto/ProspettoEJB/ProspettoEJB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Prospetto/ProspettoUtilities/ProspettoUtilities.iml" filepath="$PROJECT_DIR$/Prospetto/ProspettoUtilities/ProspettoUtilities.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Prospetto/ProspettoWEB/ProspettoWEB.iml" filepath="$PROJECT_DIR$/Prospetto/ProspettoWEB/ProspettoWEB.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/prospetto.iml" filepath="$PROJECT_DIR$/.idea/prospetto.iml" />
     </modules>
   </component>
