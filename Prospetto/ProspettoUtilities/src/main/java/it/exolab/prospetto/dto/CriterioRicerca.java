@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CriterioRicercaDTO {
+public class CriterioRicerca {
     private String piva;
     private String codiceAccisa;
     private String dataRiferimento;
@@ -16,4 +16,11 @@ public class CriterioRicercaDTO {
     private CountRow countRow;
     private GiacenzaDTO giacenza;
     private Row firstRow;
+
+
+    private String tipoGiacenzaRegistro;
+    private String dataRiferimentoA;
+    private String codiceFiscale;
+    private String idGiacenzaRegistro;
+
 }
