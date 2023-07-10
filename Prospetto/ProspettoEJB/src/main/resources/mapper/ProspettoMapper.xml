@@ -732,7 +732,7 @@
         order by WURT1_TIPO_GIACENZA
     </select>
 
-    <select id="getDataRimanenza" >
+    <select id="getDataRimanenza" parameterType="it.exolab.prospetto.dto.CriterioRicerca" resultType="date">
 
         <if test="tipoGiacenzaRegistro.equals('O') || tipoGiacenzaRegistro.equals('G')">
             select MIN(wurt1_dt_giac_iniz)   as   data_giac_iniz
@@ -743,7 +743,7 @@
         from WURT1_GIACENZE_CL
         where wurt1_cod_acc = #{codiceAccisa, javaType=String, jdbcType=VARCHAR}
           and  wurt1_giacenza =  #{idGiacenzaRegistro, javaType=String, jdbcType=VARCHAR}
-          and wurt1_dt_giac_iniz <![CDATA[ <= ]]> to_date(SYSDATA)
+          and wurt1_dt_giac_iniz <![CDATA[ <= ]]> SYSDATE
 
     </select>
 
