@@ -23,9 +23,6 @@ public class Giacenza {
     @XmlElement(name="Descrizione")
     private String descrizione;
 
-    @XmlElement(name="Tipologia")
-    private Tipologia tipologia;
-
     @XmlElement(name = "DatiGiacenza")
     private DatiProspetto datiProspetto;
 }
