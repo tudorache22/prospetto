@@ -1,9 +1,10 @@
 it\exolab\prospetto\models\DownloadOperatore.class
+it\exolab\prospetto\dto\VerificaDittaDTO.class
 it\exolab\prospetto\common\ResultColumn.class
-it\exolab\prospetto\dto\CriterioRicercaDTO.class
 it\exolab\prospetto\common\CountRow.class
 it\exolab\prospetto\models\UploadAdm.class
 it\exolab\prospetto\models\EsitoRichiesta.class
+it\exolab\prospetto\dto\CriterioRicerca.class
 it\exolab\prospetto\models\Prospetto.class
 it\exolab\prospetto\dto\GiacenzaDTO.class
 it\exolab\prospetto\enums\Tipologia.class

@@ -1,3 +1,11 @@
-D:\progetti\prospettoVerticale\prospetto\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\factory\ProspettoSessionFactory.java
-D:\progetti\prospettoVerticale\prospetto\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\mapper\ProspettoMapper.java
-D:\progetti\prospettoVerticale\prospetto\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\mapper\ProspettoMapperImpl.java
+D:\development\workspaces\workspace-was8-monopoli\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\controllers\ProspettoControllerInterface.java
+D:\development\workspaces\workspace-was8-monopoli\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\controllers\ProspettoController.java
+D:\development\workspaces\workspace-was8-monopoli\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\utility\ManageConverter.java
+D:\development\workspaces\workspace-was8-monopoli\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\utility\XmlHandler.java
+D:\development\workspaces\workspace-was8-monopoli\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\mapper\ProspettoMapper.java
+D:\development\workspaces\workspace-was8-monopoli\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\utility\BuilderObjects.java
+D:\development\workspaces\workspace-was8-monopoli\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\utility\ValidationProspetto.java
+D:\development\workspaces\workspace-was8-monopoli\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\factory\ProspettoSessionFactory.java
+D:\development\workspaces\workspace-was8-monopoli\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\utility\ManageCampiProspetto.java
+D:\development\workspaces\workspace-was8-monopoli\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\utility\ManageProspetto.java
+D:\development\workspaces\workspace-was8-monopoli\Prospetto\ProspettoEJB\src\main\java\it\exolab\prospetto\mapper\ProspettoMapperImpl.java

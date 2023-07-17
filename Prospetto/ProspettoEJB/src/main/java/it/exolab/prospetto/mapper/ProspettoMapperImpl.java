@@ -1,6 +1,6 @@
 package it.exolab.prospetto.mapper;
 
-import it.exolab.prospetto.common.CountRow;
+
 import it.exolab.prospetto.common.ResultColumn;
 import it.exolab.prospetto.dto.CriterioRicerca;
 import it.exolab.prospetto.dto.GiacenzaDTO;

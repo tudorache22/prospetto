@@ -1,14 +1,13 @@
 package it.exolab.prospetto.mapper;
 
+import java.io.IOException;
+import java.sql.Date;
+import java.util.List;
+
 import it.exolab.prospetto.common.ResultColumn;
 import it.exolab.prospetto.dto.CriterioRicerca;
 import it.exolab.prospetto.dto.GiacenzaDTO;
 import it.exolab.prospetto.dto.VerificaDittaDTO;
-import it.exolab.prospetto.models.Giacenza;
-
-import java.io.IOException;
-import java.sql.Date;
-import java.util.List;
 
 
 public interface ProspettoMapper {

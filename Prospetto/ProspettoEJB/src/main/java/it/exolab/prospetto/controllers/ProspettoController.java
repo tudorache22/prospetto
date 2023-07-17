@@ -1,6 +1,9 @@
 package it.exolab.prospetto.controllers;
 
-import it.exolab.prospetto.models.*;
+import it.exolab.prospetto.models.DownloadAdm;
+import it.exolab.prospetto.models.DownloadOperatore;
+import it.exolab.prospetto.models.UploadAdm;
+import it.exolab.prospetto.models.UploadOperatore;
 import it.exolab.prospetto.utility.BuilderObjects;
 
 import javax.ejb.LocalBean;
