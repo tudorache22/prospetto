@@ -1,43 +1,21 @@
 package it.exolab.prospetto.mapper;
 
-
-
-import it.exolab.prospetto.dto.ProspettoDTO;
-import it.exolab.prospetto.models.CriterioRicerca;
-import it.exolab.prospetto.models.DataRimanenzaRow;
-import it.exolab.prospetto.models.GiacenzaCriterio;
-import it.exolab.prospetto.models.ResultRow;
-
+import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
+import it.exolab.prospetto.common.ResultColumn;
+import it.exolab.prospetto.dto.CriterioRicerca;
+import it.exolab.prospetto.dto.GiacenzaDTO;
+import it.exolab.prospetto.dto.VerificaDittaDTO;
+
+
 public interface ProspettoMapper {
-    public ProspettoDTO calcolaProspetto(CriterioRicerca criterio);
 
-    public DataRimanenzaRow calcolaDataRimanenza(CriterioRicerca criterio);
-
-    public ResultRow calcolaRimanenza(CriterioRicerca criterio);
-
-    public ResultRow calcolaIntrodotto(CriterioRicerca criterio);
-
-    public ResultRow calcolaEccedenze1(CriterioRicerca criterio);
-
-    public ResultRow calcolaEccedenze2(CriterioRicerca criterio);
-
-    public ResultRow calcolaEccedenze3(CriterioRicerca criterio);
-
-    public ResultRow calcolaEccedenze4(CriterioRicerca criterio);
-
-    public ResultRow calcolaErogato(CriterioRicerca criterio);
-
-    public ResultRow calcolaCaliAnnotati1(CriterioRicerca criterio);
-
-    public ResultRow calcolaCaliAnnotati2(CriterioRicerca criterio);
-
-    public ResultRow calcolaCaliAnnotati3(CriterioRicerca criterio);
-
-    public ResultRow calcolaCaliAnnotati4(CriterioRicerca criterio);
-
-    public ResultRow calcolaRimanenzaContabile(CriterioRicerca criterio);
-
-    public List<GiacenzaCriterio> getGiacenze(CriterioRicerca criterio);
+    List<ResultColumn> calcolaProspetto (List<CriterioRicerca> listaCriteri) throws Exception;
+    List<CriterioRicerca> calcolaDataRimanenza(List<GiacenzaDTO> listaGiacenze)throws Exception;
+    List<GiacenzaDTO> getGiacenze(String codiceAccise)throws Exception;
+    List<VerificaDittaDTO> verificaCompetenzaDitta(List<CriterioRicerca> criterio)throws Exception;
+    int verificaStatoAnnullato(CriterioRicerca criterio)throws Exception;
+    String getTelelivelli(String codiceAccise)throws Exception;
 }

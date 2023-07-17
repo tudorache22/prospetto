@@ -1,0 +1,7 @@
+package it.exolab.prospetto.enums;
+
+public enum Tipologia {
+    BENZINA_1, BENZINA_2, BENZINA_3, BENZINA_4, BENZINA_5, BENZINA_ALTRO,
+    GASOLIO_1, GASOLIO_2, GASOLIO_3, GASOLIO_4, GASOLIO_5, GASOLIO_ALTRO,
+    GPL,OLIO_LUBRIFICANTE
+}
