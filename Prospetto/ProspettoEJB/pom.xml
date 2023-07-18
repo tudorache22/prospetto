@@ -41,12 +41,12 @@
                 </configuration>
             </plugin>
             
-            <!-- Plugin EJB -->
+            
             <plugin>
                 <artifactId>maven-ejb-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
-                    <ejbVersion>3.2</ejbVersion> <!-- Imposta la versione dell'EJB -->
+                    <ejbVersion>3.2</ejbVersion>
                 </configuration>
             </plugin>
         </plugins>
