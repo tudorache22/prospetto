@@ -31,7 +31,7 @@
  
      <build>
         <plugins>
-            <!-- Plugin di compilazione del modulo EJB -->
+    
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
